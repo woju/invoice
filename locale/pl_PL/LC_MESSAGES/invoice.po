@@ -1,0 +1,129 @@
+# Polish (Poland) translations for invoice.
+# Copyright (C) 2015 Wojtek Porczyk
+# This file is distributed under the same license as the invoice project.
+# Wojtek Porczyk <wojciech@porczyk.eu>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version:  1.0-alpha\n"
+"Report-Msgid-Bugs-To: wojciech@porczyk.eu\n"
+"POT-Creation-Date: 2015-05-29 18:52+0200\n"
+"PO-Revision-Date: 2015-05-29 18:30+0200\n"
+"Last-Translator: Wojtek Porczyk <wojciech@porczyk.eu>\n"
+"Language-Team: Wojtek Porczyk <wojciech@porczyk.eu>\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: ../templates/invoice.tex:36
+msgid "VAT Invoice"
+msgstr "Faktura VAT"
+
+#: ../templates/invoice.tex:37
+msgid "PROFORMA"
+msgstr "PROFORMA"
+
+#: ../templates/invoice.tex:38
+#, python-format
+msgid "no.~{\\tfa %(number)s}"
+msgstr "nr~{\\tfa %(number)s}"
+
+#: ../templates/invoice.tex:46
+msgid "Seller:"
+msgstr "Sprzedawca:"
+
+#: ../templates/invoice.tex:54
+msgid "Buyer:"
+msgstr "Nabywca:"
+
+#: ../templates/invoice.tex:76
+msgid "no."
+msgstr "lp."
+
+#: ../templates/invoice.tex:77
+msgid "item"
+msgstr "nazwa"
+
+#: ../templates/invoice.tex:78
+msgid "unit"
+msgstr "jm."
+
+#: ../templates/invoice.tex:79
+msgid "unit price"
+msgstr "cena netto"
+
+#: ../templates/invoice.tex:80
+msgid "VAT \\%"
+msgstr "VAT \\%"
+
+#: ../templates/invoice.tex:81
+msgid "amount"
+msgstr "wartość brutto"
+
+#: ../templates/invoice.tex:84
+msgid "qty"
+msgstr "ilość"
+
+#: ../templates/invoice.tex:85
+msgid "subtotal"
+msgstr "wartość"
+
+#: ../templates/invoice.tex:86
+msgid "VAT"
+msgstr "VAT"
+
+#: ../templates/invoice.tex:107
+msgid "total"
+msgstr "suma"
+
+#: ../templates/invoice.tex:118
+msgid "Reverse charge, art.~28b."
+msgstr "Odwrotne obciążenie, art.~28b."
+
+#: ../templates/invoice.tex:132
+msgid "Total due:"
+msgstr "Do zapłaty:"
+
+#: ../templates/invoice.tex:136
+msgid "Delivered:"
+msgstr "Data wykonania"
+
+#: ../templates/invoice.tex:140
+msgid "Invoice issued:"
+msgstr "Data wystawienia:"
+
+#: ../templates/invoice.tex:144
+msgid "Due date:"
+msgstr "Termin płatności"
+
+#: ../templates/invoice.tex:146
+#, python-format
+msgid "%(grace)s day"
+msgid_plural "%(grace)s days"
+msgstr[0] "%(grace)s dzień"
+msgstr[1] "%(grace)s dni"
+msgstr[2] "%(grace)s dni"
+
+#: ../templates/invoice.tex:154
+msgid "Please pay via:"
+msgstr "Na konto:"
+
+#: ../templates/invoice.tex:203
+msgid "phone:"
+msgstr "telefon:"
+
+#: ../templates/invoice.tex:207
+msgid "email:"
+msgstr "email:"
+
+#: ../templates/invoice.tex:211
+msgid "PGP key:"
+msgstr "klucz PGP:"
+
+#: ../templates/invoice.tex:215
+msgid "fingerprint:"
+msgstr "fingerprint:"
+

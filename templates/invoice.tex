@@ -1,0 +1,246 @@
+%\definepapersize[A4e][width=230mm,height=317mm]
+\enableregime[utf]
+\setuppapersize[A4][A4]
+\setuplayout[location={middle,middle}]
+\setuplayout[
+    backspace=25mm,
+    topspace=20mm,top=0mm,
+    header=0mm,footer=0mm,
+    width=160mm
+    ]
+%\setuppagenumbering[location=]
+
+
+%\starttypescript[serif][antykwapoltawskiego]
+%    \definefontsynonym[Serif][antpoltregular]
+%    \definefontsynonym[SerifItalic][antpoltitalic]
+%    \definefontsynonym[SerifBold][antpoltbold]
+%    \definefontsynonym[SerifBoldItalic][antpoltbolditalic]
+%    \definefontsynonym[Mono][ocrb10]
+%\stoptypescript
+%\setupbodyfont[antykwapoltawskiego]
+
+
+%\definebodyfontenvironment[default][xx=8pt,x=10pt,text=11pt,a=12pt,b=14pt]
+
+\setupexternalfigures[directory={../.invoice/media}]
+\setupinteraction[state=start,color=,style=]
+
+\defineparagraphs[customer][n=2,distance=0mm]
+\setupparagraphs[customer][1][width=70mm]
+
+\mainlanguage[pl]
+\starttext
+
+\startalignment[flushright]
+{% trans %}VAT Invoice{% endtrans %} %
+{% if not invoice.finalised %} ({% trans %}PROFORMA{% endtrans %}){% endif %} %
+{% trans number=invoice.number %}no.~{\tfa {{ number }}}{% endtrans %}
+\stopalignment
+
+\blank[line]
+
+\startcustomer
+
+\startlines
+{\bf {% trans %}Seller:{% endtrans %}}
+\blank[2mm]
+{{ address }}
+\stoplines
+
+\nextcustomer
+
+\startlines
+{\bf {% trans %}Buyer:{% endtrans %}}
+\blank[2mm]
+{{ invoice.customer.address }}
+\stoplines
+
+\stopcustomer
+
+\blank[8mm]
+
+\start
+\setupTABLE[each][each][leftframe=off,rightframe=off]
+\setupTABLE[r][each][height=8mm]
+\setupTABLE[r][1,2,{{ invoice.lines|count * 2 + 3 }}][style=bf]
+\setupTABLE[c][1][width=10mm,align={nothyphenated,middle,lohi}]       % lp.
+\setupTABLE[c][2][width=60mm,align={nothyphenated,flushleft,lohi}]    % nazwa
+\setupTABLE[c][3][width=15mm,align={nothyphenated,middle,lohi}]       % ilość + jm
+\setupTABLE[c][4][width=25mm,align={nothyphenated,flushright,lohi}]   % netto
+\setupTABLE[c][5][width=25mm,align={nothyphenated,flushright,lohi}]   % vat, wartość
+\setupTABLE[c][6][width=25mm,align={nothyphenated,flushright,lohi}]   % brutto
+
+\bTABLE
+\bTR[align={middle,lohi}]
+    \bTD[nr=2]  {% trans %}no.{% endtrans %}\eTD
+    \bTD[nr=2]  {% trans %}item{% endtrans %}\eTD
+    \bTD        {% trans %}unit{% endtrans %}\eTD
+    \bTD        {% trans %}unit price{% endtrans %}\eTD
+    \bTD        {% trans %}VAT \%{% endtrans %}\eTD
+    \bTD[nr=2]  {% trans %}amount{% endtrans %}\eTD
+\eTR
+\bTR[align={middle,lohi}]
+    \bTD {% trans %}qty{% endtrans %}\eTD
+    \bTD {% trans %}subtotal{% endtrans %}\eTD
+    \bTD {% trans %}VAT{% endtrans %}\eTD
+\eTR
+
+{% for line in invoice.lines %}
+\bTR
+    \bTD[nr=2] {{ loop.index }}\eTD
+    \bTD[nr=2] {{ line.product.name }}\eTD
+    \bTD {{ line.product.unit }}\eTD
+    \bTD {{ '%.2f'|format(line.price) }}\eTD
+    \bTD {{ '%.2f'|format(line.vat) }}\eTD
+    \bTD[nr=2] {{ line.brutto|format_currency(invoice.currency_code)|escapetex }}\eTD
+\eTR
+\bTR
+    \bTD {{ '%.1f'|format(line.amount) }}\eTD
+    \bTD {{ '%.2f'|format(line.netto) }} \eTD
+    \bTD {{ '%.2f'|format(line.tax) }}\eTD
+\eTR
+{% endfor %}
+
+\bTR[height=10mm]
+    \bTD[nc=2,frame=off]\eTD
+    \bTD[align={flushright,lohi}] {% trans %}total{% endtrans %}\eTD
+    \bTD {{ '%.2f'|format(invoice.netto) }}\eTD
+    \bTD {{ '%.2f'|format(invoice.tax) }}\eTD
+    \bTD {{ invoice.brutto|format_currency(invoice.currency_code)|escapetex }}\eTD
+\eTR
+
+{% if invoice.currency.code != 'PLN' and invoice.tax > 0.0 %}
+\bTR[height=10mm]
+    \bTD[frame=off,nc=3] VAT po kursie śr. NBP z~dnia~{{ invoice.currency_rate_date.strftime('%d.%m.%Y') }} \eTD
+    \bTD[align={flushright,lohi}] {{ invoice.currency_rate }}
+        $\frac{\mathrm{ {{ invoice.currency_code }} }}{\mathrm{PLN}}$\eTD
+    \bTD {{ invoice.tax_pln|format_currency('PLN')|replace(' ', '')|escapetex }}\eTD
+    \bTD[frame=off] \eTD
+\eTR
+{% endif %}
+
+\eTABLE
+\stop
+
+{% for feature in invoice.features %}
+    {% if feature.code == '28b' %}
+        {\tfx {% trans %}Reverse charge, art.~28b.{% endtrans %}}
+    {% endif %}
+{% endfor %}
+
+\vfill
+
+\start
+\setupTABLE[each][each][align={flushleft,low},frame=off]
+\setupTABLE[c][1][width=30mm]
+\setupTABLE[c][2][width=40mm]
+
+\bTABLE
+\bTR
+    \bTD[nr=9]\eTD
+    \bTD {% trans %}Total due:{% endtrans %}\eTD
+    \bTD[style={\tfa\bf}] {{ invoice.brutto|format_currency(invoice.currency.code)|escapetex }}\eTD
+\eTR
+\bTR
+    \bTD {% trans %}Delivered:{% endtrans %}\eTD
+    \bTD {{ invoice.delivered|texdate }}\eTD
+\eTR
+\bTR
+    \bTD {% trans %}Invoice issued:{% endtrans %}\eTD
+    \bTD {{ invoice.issued|texdate }}\eTD
+\eTR
+\bTR
+    \bTD {% trans %}Due date:{% endtrans %}\eTD
+    \bTD {{ invoice.deadline|texdate }} (
+        {%- trans grace=invoice.grace -%}
+            {{ grace }} day
+        {%- pluralize -%}
+            {{ grace }} days
+        {%- endtrans -%}
+    )\eTD
+\eTR
+{% if invoice.currency.code == 'USD' %}
+\bTR
+    \bTD {% trans %}Please pay via:{% endtrans %}\eTD
+\eTR
+\bTR
+    \bTD[align={flushright,lohi}] IBAN:\eTD
+    \bTD[style=tfa]
+        PL41 1140 2004 0000 3112 0364 0760
+    \eTD
+\eTR
+\bTR
+    \bTD[align={flushright}] Bank:\eTD
+    \bTD
+        mBank S.A. FORMERLY BRE BANK S.A. (RETAIL BANKING) LODZ\crlf
+        al. Piłsudskiego 3\crlf
+        90-368 Łódź
+    \eTD
+\eTR
+\bTR
+    \bTD[align={flushright,lohi}] SWIFT/BIC:\eTD
+    \bTD
+        BREXPLPWMBK
+    \eTD
+\eTR
+\bTR
+    \bTD[align={flushright,lohi}] SORT CODE:\eTD
+    \bTD
+        11402004
+    \eTD
+\eTR
+{% else %}
+\bTR
+    \bTD Na konto:\eTD
+    \bTD[style=tfa] PL11 1140 2004 0000 3502 4998 1530\eTD
+\eTR
+\bTR
+    \bTD\eTD
+    \bTD {\tfx mBank~SA O.~Bankowości~Detalicznej}\eTD
+\eTR
+{% endif %}
+
+\eTABLE
+\stop
+
+\blank[12mm]
+
+\tfx
+
+\start
+\setupTABLE[each][each][align=flushleft,frame=off]
+\setupTABLE[c][1][align=flushleft,width=40mm]
+\setupTABLE[c][2][align=flushright,width=30mm]
+\setupTABLE[c][3][align=flushleft,width=60mm]
+\setupTABLE[c][4][align=flushright,width=30mm]
+\bTABLE
+\bTR
+    \bTD[nr=5]\eTD
+    \bTD\eTD
+    \bTD {\bf Wojciech Porczyk} \eTD
+    \bTD[nr=5]\externalfigure[qrcode.pdf][width=30mm] \eTD
+\eTR
+\bTR
+    \bTD {% trans %}phone:{% endtrans %}\eTD
+    \bTD \goto{+48 692 890 610}[url(tel:+48692890610)]\eTD
+\eTR
+\bTR
+    \bTD {% trans %}email:{% endtrans %}\eTD
+    \bTD \goto{wojciech@porczyk.eu}[url(mailto:wojciech@porczyk.eu)]\eTD
+\eTR
+\bTR
+    \bTD {% trans %}PGP key:{% endtrans %}\eTD
+    \bTD \goto{http://woju.eu/pgpkey.asc}[url(http://woju.eu/pgpkey.asc)]\eTD
+\eTR
+\bTR
+    \bTD {% trans %}fingerprint:{% endtrans %}\eTD
+    \bTD{\tt 3f59 c4b0 dd75 fb14 87be\crlf 5f52 4cb6 31f2 \bf 951b 953c}\eTD
+\eTR
+\eTABLE
+\stop
+
+\stoptext
+{#
+vim: ft=context ts=4 sw=4 et
+#}

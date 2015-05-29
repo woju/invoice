@@ -1,0 +1,3 @@
+invoice/__pycache__/
+invoice/*.py[co]
+invoice.sqlite3
