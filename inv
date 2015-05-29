@@ -1,0 +1,8 @@
+#!/usr/bin/python3 -O
+
+import invoice.cli
+
+if __name__ == '__main__':
+    invoice.cli.main()
+
+# vim: ts=4 sts=4 sw=4 et

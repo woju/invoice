@@ -1,0 +1,39 @@
+{% if not short -%}
+Faktura {% if invoice.finalised %}VAT{% else %}PROFORMA{% endif %} nr {{ invoice.number }}
+
+ -- Sprzedawca: --
+{{ address }}
+ -- Nabywca: -----
+{{ invoice.customer.address }}
+{% endif -%}
+==============================================================================
+ lp.  nazwa                                  jm.    netto    VAT %    wartość
+                                             ilość  wartość  kwota    brutto
+==============================================================================
+{% for line in invoice.lines -%}
+{% if loop.index != 1 -%}
+ ----------------------------------------------------------------------------
+{% endif -%}
+{{ '%4d'|format(loop.index) }}  {{ '%-37s'|format(line.product.name) }}  {{ '%5s'|format(line.product.unit) }}  {{ '%7.2f'|format(line.price) }}  {{ '%7.2f'|format(line.vat) }}
+                                             {{ '%5d'|format(line.amount) }}  {{ '%7.2f'|format(line.netto) }}  {{ '%7.2f'|format(line.tax) }}  {{ '%7.2f'|format(line.brutto) }}
+{% endfor  %}{% if invoice.lines|count > 0 %}==============================================================================
+{% endif %}                                              SUMA  {{ '%7.2f'|format(invoice.netto) }}  {{ '%7.2f'|format(invoice.tax) }}  {{ '%7.2f'|format(invoice.brutto) }}
+                                            ==================================
+{% if not short %}
+Do zapłaty:        {{ invoice.brutto|format_currency(invoice.currency) }}
+Data wykonania:    {{ invoice.delivered }}
+Data wystawienia:  {{ invoice.issued }}
+Termin płatności:  {{ invoice.deadline }} ({{ invoice.grace }} dni)
+Forma płatności:   przelew
+Na konto:          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                   mBank SA O. Bankowości Detalicznej
+
+                   Wojciech Porczyk
+          telefon: XXXXXXXXXXXXXXX
+           e-mail: XXXXXXXXXXXXXXXXXXX
+          PGP key: http://woju.eu/pgpkey.asc
+      fingerprint: 3f59 c4b0 dd75 fb14 87be  5f52 4cb6 31f2 951b 953c
+{% endif -%}
+{#
+vim: ft=django ts=4 sw=4 et
+#}
