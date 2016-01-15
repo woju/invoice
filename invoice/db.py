@@ -222,7 +222,9 @@ class Invoice(Base):
     def tex(self, locale=None):
         if locale is None:
             locale = 'pl_PL'
-        trans = gettext.translation('invoice', 'locale', languages=[locale], fallback=True)
+        trans = gettext.translation('invoice', os.path.abspath(
+                os.path.join(os.path.dirname(__file__), '../locale')),
+            languages=[locale], fallback=True)
 
         # pylint: disable=no-member
         invoice.env.install_gettext_translations(trans, newstyle=True)

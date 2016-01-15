@@ -20,7 +20,7 @@ Faktura {% if invoice.finalised %}VAT{% else %}PROFORMA{% endif %} nr {{ invoice
 {% endif %}                                              SUMA  {{ '%7.2f'|format(invoice.netto) }}  {{ '%7.2f'|format(invoice.tax) }}  {{ '%7.2f'|format(invoice.brutto) }}
                                             ==================================
 {% if not short %}
-Do zapłaty:        {{ invoice.brutto|format_currency(invoice.currency) }}
+Do zapłaty:        {{ invoice.brutto|format_currency(invoice.currency.code, format='0.00 ¤') }}
 Data wykonania:    {{ invoice.delivered }}
 Data wystawienia:  {{ invoice.issued }}
 Termin płatności:  {{ invoice.deadline }} ({{ invoice.grace }} dni)

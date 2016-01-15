@@ -56,8 +56,8 @@ msgid "unit price"
 msgstr "cena netto"
 
 #: ../templates/invoice.tex:80
-msgid "VAT \\%"
-msgstr "VAT \\%"
+msgid "VAT rate"
+msgstr "stawka VAT"
 
 #: ../templates/invoice.tex:81
 msgid "amount"
@@ -69,11 +69,11 @@ msgstr "ilość"
 
 #: ../templates/invoice.tex:85
 msgid "subtotal"
-msgstr "wartość"
+msgstr "wartość netto"
 
 #: ../templates/invoice.tex:86
 msgid "VAT"
-msgstr "VAT"
+msgstr "kwota VAT"
 
 #: ../templates/invoice.tex:107
 msgid "total"
@@ -89,7 +89,7 @@ msgstr "Do zapłaty:"
 
 #: ../templates/invoice.tex:136
 msgid "Delivered:"
-msgstr "Data wykonania"
+msgstr "Data wykonania:"
 
 #: ../templates/invoice.tex:140
 msgid "Invoice issued:"
@@ -97,7 +97,7 @@ msgstr "Data wystawienia:"
 
 #: ../templates/invoice.tex:144
 msgid "Due date:"
-msgstr "Termin płatności"
+msgstr "Termin płatności:"
 
 #: ../templates/invoice.tex:146
 #, python-format

@@ -1,12 +1,11 @@
-%\definepapersize[A4e][width=230mm,height=317mm]
 \enableregime[utf]
 \setuppapersize[A4][A4]
 \setuplayout[location={middle,middle}]
 \setuplayout[
-    backspace=25mm,
+    backspace=15mm,
     topspace=20mm,top=0mm,
     header=0mm,footer=0mm,
-    width=160mm
+    width=180mm
     ]
 %\setuppagenumbering[location=]
 
@@ -27,7 +26,7 @@
 \setupinteraction[state=start,color=,style=]
 
 \defineparagraphs[customer][n=2,distance=0mm]
-\setupparagraphs[customer][1][width=70mm]
+\setupparagraphs[customer][1][width=75mm]
 
 \mainlanguage[pl]
 \starttext
@@ -65,25 +64,27 @@
 \setupTABLE[r][each][height=8mm]
 \setupTABLE[r][1,2,{{ invoice.lines|count * 2 + 3 }}][style=bf]
 \setupTABLE[c][1][width=10mm,align={nothyphenated,middle,lohi}]       % lp.
-\setupTABLE[c][2][width=60mm,align={nothyphenated,flushleft,lohi}]    % nazwa
+\setupTABLE[c][2][width=65mm,align={nothyphenated,flushleft,lohi}]    % nazwa
 \setupTABLE[c][3][width=15mm,align={nothyphenated,middle,lohi}]       % ilość + jm
-\setupTABLE[c][4][width=25mm,align={nothyphenated,flushright,lohi}]   % netto
-\setupTABLE[c][5][width=25mm,align={nothyphenated,flushright,lohi}]   % vat, wartość
-\setupTABLE[c][6][width=25mm,align={nothyphenated,flushright,lohi}]   % brutto
+\setupTABLE[c][4][width=30mm,align={nothyphenated,flushright,lohi}]   % netto
+\setupTABLE[c][5][width=10mm,align={nothyphenated,flushright,lohi}]   % vat
+\setupTABLE[c][6][width=20mm,align={nothyphenated,flushright,lohi}]   % vat
+\setupTABLE[c][7][width=5mm,align={nothyphenated,flushright,lohi}]   % brutto
+\setupTABLE[c][8][width=25mm,align={nothyphenated,flushright,lohi}]   % brutto
 
 \bTABLE
 \bTR[align={middle,lohi}]
-    \bTD[nr=2]  {% trans %}no.{% endtrans %}\eTD
-    \bTD[nr=2]  {% trans %}item{% endtrans %}\eTD
-    \bTD        {% trans %}unit{% endtrans %}\eTD
-    \bTD        {% trans %}unit price{% endtrans %}\eTD
-    \bTD        {% trans %}VAT \%{% endtrans %}\eTD
-    \bTD[nr=2]  {% trans %}amount{% endtrans %}\eTD
+    \bTD[nr=2] {% trans %}no.{% endtrans %}\eTD
+    \bTD[nr=2] {% trans %}item{% endtrans %}\eTD
+    \bTD       {% trans %}unit{% endtrans %}\eTD
+    \bTD[align={flushright,lohi}] {% trans %}unit price{% endtrans %}\eTD
+    \bTD[nc=2,align={flushright,lohi}] {% trans %}VAT rate{% endtrans %}\eTD
+    \bTD[nc=2,nr=2] {% trans %}amount{% endtrans %}\eTD
 \eTR
 \bTR[align={middle,lohi}]
     \bTD {% trans %}qty{% endtrans %}\eTD
-    \bTD {% trans %}subtotal{% endtrans %}\eTD
-    \bTD {% trans %}VAT{% endtrans %}\eTD
+    \bTD[align={flushright,lohi}] {% trans %}subtotal{% endtrans %}\eTD
+    \bTD[nc=2,align={flushright,lohi}] {% trans %}VAT{% endtrans %}\eTD
 \eTR
 
 {% for line in invoice.lines %}
@@ -91,32 +92,34 @@
     \bTD[nr=2] {{ loop.index }}\eTD
     \bTD[nr=2] {{ line.product.name }}\eTD
     \bTD {{ line.product.unit }}\eTD
-    \bTD {{ '%.2f'|format(line.price) }}\eTD
-    \bTD {{ '%.2f'|format(line.vat) }}\eTD
-    \bTD[nr=2] {{ line.brutto|format_currency(invoice.currency_code)|escapetex }}\eTD
+    \bTD {{ line.price|format_currency(invoice.currency_code, format='0.00') }}\eTD
+    \bTD[nc=2] {{ line.vat|format_decimal(format='#') }} \%\eTD
+    \bTD[nc=2,nr=2] {{ line.brutto|format_currency(invoice.currency_code, format='0.00~¤')|escapetex }}\eTD
 \eTR
 \bTR
-    \bTD {{ '%.1f'|format(line.amount) }}\eTD
-    \bTD {{ '%.2f'|format(line.netto) }} \eTD
-    \bTD {{ '%.2f'|format(line.tax) }}\eTD
+    \bTD {{ line.amount|format_decimal(format='0.0') }}\eTD
+    \bTD {{ line.netto|format_currency(invoice.currency_code, format='0.00') }} \eTD
+    \bTD[nc=2] {{ line.tax|format_currency(invoice.currency_code, format='0.00') }}\eTD
 \eTR
 {% endfor %}
 
 \bTR[height=10mm]
     \bTD[nc=2,frame=off]\eTD
-    \bTD[align={flushright,lohi}] {% trans %}total{% endtrans %}\eTD
-    \bTD {{ '%.2f'|format(invoice.netto) }}\eTD
-    \bTD {{ '%.2f'|format(invoice.tax) }}\eTD
-    \bTD {{ invoice.brutto|format_currency(invoice.currency_code)|escapetex }}\eTD
+    \bTD[align={middle,lohi}] {% trans %}total{% endtrans %}\eTD
+    \bTD {{ invoice.netto|format_currency(invoice.currency_code, format='0.00') }}\eTD
+    \bTD[nc=2] {{ invoice.tax|format_currency(invoice.currency_code, format='0.00') }}\eTD
+    \bTD[nc=2] {{ invoice.brutto|format_currency(invoice.currency_code, format='0.00~¤')|escapetex }}\eTD
 \eTR
 
 {% if invoice.currency.code != 'PLN' and invoice.tax > 0.0 %}
 \bTR[height=10mm]
-    \bTD[frame=off,nc=3] VAT po kursie śr. NBP z~dnia~{{ invoice.currency_rate_date.strftime('%d.%m.%Y') }} \eTD
-    \bTD[align={flushright,lohi}] {{ invoice.currency_rate }}
-        $\frac{\mathrm{ {{ invoice.currency_code }} }}{\mathrm{PLN}}$\eTD
-    \bTD {{ invoice.tax_pln|format_currency('PLN')|replace(' ', '')|escapetex }}\eTD
-    \bTD[frame=off] \eTD
+    \bTD[nc=2,frame=off]\eTD
+    \bTD[align={middle,lohi}] VAT {#po kursie śr.~NBP z~dnia~{{ invoice.currency_rate_date.strftime('%d.%m.%Y') }}#}\eTD
+    \bTD[align={flushright,lohi}] {{ invoice.currency_rate|format_decimal(format='0.####') }}\eTD
+    \bTD[align={flushleft,lohi}] $\frac{\mathrm{ {{ invoice.currency_code }} }}{\mathrm{PLN}}$\eTD
+    \bTD {{ invoice.tax_pln|format_currency('PLN', format='0.00')|escapetex }}\eTD
+    \bTD[align={flushleft,lohi}] {{ get_currency_symbol('PLN')|escapetex }}\eTD
+    \bTD[frame=off]\eTD
 \eTR
 {% endif %}
 
@@ -133,14 +136,14 @@
 
 \start
 \setupTABLE[each][each][align={flushleft,low},frame=off]
-\setupTABLE[c][1][width=30mm]
+\setupTABLE[c][1][width=35mm]
 \setupTABLE[c][2][width=40mm]
 
 \bTABLE
 \bTR
     \bTD[nr=9]\eTD
     \bTD {% trans %}Total due:{% endtrans %}\eTD
-    \bTD[style={\tfa\bf}] {{ invoice.brutto|format_currency(invoice.currency.code)|escapetex }}\eTD
+    \bTD[style={\tfa\bf}] {{ invoice.brutto|format_currency(invoice.currency.code, format='0.00~¤')|escapetex }}\eTD
 \eTR
 \bTR
     \bTD {% trans %}Delivered:{% endtrans %}\eTD
@@ -173,7 +176,7 @@
 \bTR
     \bTD[align={flushright}] Bank:\eTD
     \bTD
-        mBank S.A. FORMERLY BRE BANK S.A. (RETAIL BANKING) LODZ\crlf
+        mBank S.A. FORMERLY BRE BANK S.A.\crlf (RETAIL BANKING) LODZ\crlf
         al. Piłsudskiego 3\crlf
         90-368 Łódź
     \eTD
@@ -210,7 +213,7 @@
 
 \start
 \setupTABLE[each][each][align=flushleft,frame=off]
-\setupTABLE[c][1][align=flushleft,width=40mm]
+\setupTABLE[c][1][align=flushleft,width=45mm]
 \setupTABLE[c][2][align=flushright,width=30mm]
 \setupTABLE[c][3][align=flushleft,width=60mm]
 \setupTABLE[c][4][align=flushright,width=30mm]
