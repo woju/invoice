@@ -1,10 +1,10 @@
 ==============================================================================
- F    numer  klient
- d. wykon.   d. wystaw.  termin                      liczba  netto    brutto
+ F    numer  klient                                                    waluta
+ d. wykon.   d. wystaw.  termin                      liczba   netto    brutto
 ==============================================================================
 {% for invoice in invoices -%}
 {% if loop.index != 1 %} ----------------------------------------------------------------------------
-{% endif %} {% if invoice.finalised %}{{ '*'|colour('bgreen') }}{% else %} {% endif %} {{ '%8s'|format(invoice.number) }}  {{ invoice.customer.short|colour('bold') }}
+{% endif %} {% if invoice.finalised %}{{ '*'|colour('bgreen') }}{% else %} {% endif %} {{ '%8s'|format(invoice.number) }}  {{ '%-59s'|format(invoice.customer.short)|colour('bold') }}  {{ invoice.currency_code }}
  {{ invoice.delivered }}  {{ invoice.issued }}  {{ invoice.deadline }} ({{ '%2d'|format(invoice.grace) }} dni)            {{ '%3d'|format(invoice.lines|count) }}  {{ '%7.2f'|format(invoice.netto)|colour('bold') }}  {{ '%7.2f'|format(invoice.brutto) }}
 {% endfor -%}
 ==============================================================================

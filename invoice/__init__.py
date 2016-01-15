@@ -107,17 +107,13 @@ env.filters['texdate'] = filter_texdate
 
 env.filters['escapetex'] = lambda value: str(value) \
     .replace('$', '\\$') \
-    .replace('\xa0', '~') \
 
-def format_currency(value, currency):
-    tokens = babel.numbers.format_currency(value, currency, locale='pl_PL').split('\xa0')
-    return '{}\xa0{}'.format(''.join(tokens[:-1]), tokens[-1])
-env.filters['format_currency'] = format_currency
-del format_currency
+env.filters['format_currency'] = babel.numbers.format_currency
+env.filters['format_decimal'] = babel.numbers.format_decimal
     
-
 env.globals['address'] = config.get_data('address')
 env.globals['float'] = float
+env.globals['get_currency_symbol'] = babel.numbers.get_currency_symbol
 
 
 # vim: ts=4 sts=4 sw=4 et
