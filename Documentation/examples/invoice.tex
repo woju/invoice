@@ -1,0 +1,115 @@
+{% extends 'invoice-plain.tex' %}
+
+{# FIXME #}
+{% block seller -%}
+NAME
+ADDRESS
+NIP
+{% endblock %}
+
+{# FIXME #}
+{% block payment -%}
+    {% set iban = {
+        'PLN': 'PLxx xxxx xxxx xxxx xxxx xxxx xxxx',
+        'EUR': 'PLxx xxxx xxxx xxxx xxxx xxxx xxxx',
+        'USD': 'PLxx xxxx xxxx xxxx xxxx xxxx xxxx',
+    } -%}
+
+    \bTR
+        \bTD {% trans %}Please pay via:{% endtrans %}\eTD
+    \eTR
+    \bTR
+        \bTD[align={flushright,lohi}] IBAN:\eTD
+        \bTD[style=tfa]
+            {{ iban[invoice.currency] }}
+        \eTD
+    \eTR
+
+    {% if invoice.is_foreign_currency %}
+        \bTR
+            \bTD[align={flushright},style=sc] Bank:\eTD
+            \bTD
+                mBank S.A. FORMERLY BRE BANK S.A.\crlf (RETAIL BANKING) LODZ\crlf
+                al. Piłsudskiego 3\crlf
+                90-368 Łódź
+            \eTD
+        \eTR
+        \bTR
+            \bTD[align={flushright,lohi},style=sc] swift/bic:\eTD
+            \bTD
+                BREXPLPWMBK
+            \eTD
+        \eTR
+        \bTR
+            \bTD[align={flushright,lohi},style=sc] sort code:\eTD
+            \bTD
+                11402004
+            \eTD
+        \eTR
+
+        {% if invoice.tax > 0.0 %}
+            \bTR
+                \bTD\eTD
+                \bTD {% trans %}VAT paid in PLN:{% endtrans %}\eTD
+                \bTD[style=tfa] {{ iban.PLN }}\eTD
+            \eTR
+            \bTR
+                \bTD[nc=2]\eTD
+                \bTD {\tfx mBank~SA O.~Bankowości~Detalicznej}\eTD
+            \eTR
+        {% endif %}
+
+    {% else %}
+        \bTR
+            \bTD\eTD
+            \bTD {\tfx mBank~SA O.~Bankowości~Detalicznej}\eTD
+        \eTR
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+\tfx
+
+\start
+\setupTABLE[each][each][align=flushleft,frame=off]
+\setupTABLE[c][1][align=flushleft,width=45mm]
+\setupTABLE[c][2][align=flushright,width=30mm]
+\setupTABLE[c][3][align=flushleft,width=60mm]
+\setupTABLE[c][4][align=flushright,width=30mm]
+\bTABLE
+\bTR
+    \bTD[nr=5]\eTD
+    \bTD\eTD
+    \bTD {\bf NAME} \eTD  % FIXME
+    \bTD[nr=5]
+%       \externalfigure[qrcode.pdf][width=30mm]
+    \eTD
+\eTR
+\bTR
+    \bTD {% trans %}phone:{% endtrans %}\eTD
+    \bTD \goto{+48 xxx xxx xxx}[url(tel:+48xxxxxxxxx)]\eTD
+\eTR
+\bTR
+    \bTD {% trans %}email:{% endtrans %}\eTD
+    \bTD \goto{xxxxxxxx@xxxxxxxxxx}[url(mailto:xxxxxxxx@xxxxxxxxxx)]\eTD  % FIXME
+\eTR
+\bTR
+    \bTD {% trans %}PGP key:{% endtrans %}\eTD
+    \bTD \goto{https://xxxxxxxxxxxxxxxxxx}[url(https://xxxxxxxxxxxxxxxxxx)]\eTD  % FIXME
+\eTR
+\bTR
+    \bTD {% trans %}fingerprint:{% endtrans %}\eTD
+    \bTD{\tt xxxx xxxx xxxx xxxx xxxx\crlf xxxx xxxx xxxx \bf xxxx xxxx}\eTD  % FIXME
+\eTR
+\eTABLE
+\stop
+{% endblock %}
+
+{% block setup %}
+\setupinteraction[state=start,color=,style=]
+%\setupexternalfigures[directory={/home/user/.invoice}]
+{% endblock %}
+
+{#
+vim: ft=context ts=4 sw=4 et
+#}

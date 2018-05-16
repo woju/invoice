@@ -1,0 +1,194 @@
+\enableregime[utf]
+\setuppapersize[A4][A4]
+\setuplayout[location={middle,middle}]
+\setuplayout[
+    backspace=15mm,
+    topspace=20mm,top=0mm,
+    header=0mm,footer=0mm,
+    width=180mm
+    ]
+%\setuppagenumbering[location=]
+
+\defineparagraphs[address][n=2,distance=0mm]
+\setupparagraphs[address][1][width=75mm]
+
+{% if invoice.features.debug %}
+\showframe
+{% endif %}
+
+\mainlanguage[pl]
+
+{% block setup %}{% endblock %}
+
+\starttext
+
+\startalignment[flushright]
+{% trans %}VAT Invoice{% endtrans %}
+{% if invoice.features.proforma %} ({% trans %}PROFORMA{% endtrans %}){% endif -%}
+{% trans number=invoice.number %}no.~{\tfa {{ number }}}{% endtrans %}
+\stopalignment
+
+\blank[line]
+
+\startaddress
+
+\startlines
+{\bf {% trans %}Seller:{% endtrans %}}
+\blank[2mm]
+{% block seller %}{% endblock %}
+\stoplines
+
+\nextaddress
+
+\startlines
+{\bf {% trans %}Buyer:{% endtrans %}}
+\blank[2mm]
+{{ invoice.customer.address }}
+\stoplines
+
+\stopaddress
+
+\blank[8mm]
+
+\start
+
+{% if not invoice.features.debug -%}
+\setupTABLE[each][each][leftframe=off,rightframe=off]
+{% endif -%}
+
+\setupTABLE[alignmentcharacter={.}]
+
+\setupTABLE[r][each][height=8mm]
+\setupTABLE[r][1][style=bf]
+
+\setupTABLE[c][1][width=10mm,align={nothyphenated,middle,lohi}]       % lp.
+\setupTABLE[c][2][width=65mm,align={nothyphenated,flushleft,lohi}]    % nazwa
+\setupTABLE[c][3][width=17mm,align={nothyphenated,middle,lohi}]       % ilość
+\setupTABLE[c][4][width=20mm]   % cena j.
+\setupTABLE[c][5][width=23mm]   % cena
+\setupTABLE[c][6][width=20mm]   % vat
+\setupTABLE[c][7][width=25mm]   % brutto
+
+\setupTABLE[c][4,5,6,7][align={middle,lohi},aligncharacter=yes]   % cena j.
+
+\bTABLE
+\bTR[height=16mm,align={middle,lohi}]
+    \bTD {% trans %}no.{% endtrans %}\eTD
+    \bTD {% trans %}item{% endtrans %}\eTD
+    \bTD {% trans %}qty{% endtrans %}\eTD
+    \bTD {% trans %}unit price{% endtrans %}\eTD
+    \bTD {% trans %}subtotal{% endtrans %}\eTD
+    \bTD {% trans %}VAT{% endtrans %}\eTD
+    \bTD {% trans %}line total{% endtrans %}\eTD
+\eTR
+
+{% for line in invoice.lines %}
+    \bTR[bottomframe=off]
+        \bTD[nr=2] {{ loop.index }}\eTD
+        \bTD[nr=2] {{ line.name }}\eTD
+        \bTD[align={middle,low}] {{ line.amount|format_decimal(format='0.') }}\eTD
+        \bTD[nr=2] {{ line.price|format_currency(invoice.currency, format='0.00') }}\eTD
+        \bTD[nr=2] {{ line.netto|format_currency(invoice.currency, format='0.00') }}\eTD
+
+        {% if invoice.features.reverse_charge %}
+            {% set dummy = assert(line.vat == 0) -%}
+            \bTD[nr=2] ---\eTD
+        {% else %}
+            \bTD[align={middle,low},aligncharacter=no] {{ line.vat|format_decimal(format='#') }} \%\eTD
+        {% endif %}
+        
+        \bTD[nr=2] {{ line.brutto|format_currency(invoice.currency, format='0.00~¤')|escapetex }}\eTD
+    \eTR
+
+    \bTR[topframe=off,align={middle,high}]
+        \bTD {{ ngettext(line.unit, line.unit_plural, line.amount) }}\eTD
+
+    {% if not invoice.features.reverse_charge %}
+        \bTD
+            {{ line.tax|format_currency(invoice.currency, format='0.00') }}
+        \eTD
+    {% endif %}
+
+    \eTR
+
+{% endfor %}
+
+\bTR[height=10mm,style=bf]
+    \bTD[nc=2,bottomframe=off]\eTD
+    \bTD\eTD
+    \bTD[align={middle,lohi}] {% trans %}total:{% endtrans %}\eTD
+    \bTD {{ invoice.netto|format_currency(invoice.currency, format='0.00') }}\eTD
+    \bTD {{ invoice.tax|format_currency(invoice.currency, format='0.00') }}\eTD
+    \bTD {{ invoice.brutto|format_currency(invoice.currency, format='0.00~¤')|escapetex }}\eTD
+\eTR
+
+{% if invoice.is_foreign_currency and invoice.tax > 0.0 %}
+\bTR[height=10mm]
+    \bTD[nc=2,frame=off]\eTD
+    \bTD\eTD
+    \bTD[align={middle,lohi}] VAT
+        {#po kursie śr.~NBP z~dnia~{{ invoice.currency_rate_date.strftime('%d.%m.%Y') }}#}\eTD
+    \bTD[align={middle,lohi},aligncharacter=no]
+        {{ invoice.currency_rate|format_decimal(format='0.00##') }}
+        $\frac{\mathrm{ {{ home_currency }} }}{\mathrm{ {{ invoice.currency }} }}$\eTD
+    \bTD {{ invoice.tax_pln|format_currency(home_currency, format='0.00~¤')|escapetex }}\eTD
+    \bTD[frame=off]\eTD
+\eTR
+{% endif %}
+
+
+\eTABLE
+\stop
+
+{% if invoice.features.reverse_charge  %}
+    {\tfx {% trans %}Reverse charge, art.~28b.{% endtrans %}}
+{% endif %}
+
+\vfill
+
+\start
+\setupTABLE[each][each][align={flushleft,low},frame=off]
+\setupTABLE[c][1][width=30mm]
+\setupTABLE[c][2][width=45mm]
+
+\bTABLE
+\bTR
+    \bTD[nr=9]\eTD
+    \bTD {% trans %}Total due:{% endtrans %}\eTD
+    \bTD
+        \bfa
+        {{ invoice.brutto|format_currency(invoice.currency, format='0.00~¤')|escapetex }}
+    \eTD
+\eTR
+\bTR
+    \bTD {% trans %}Delivered:{% endtrans %}\eTD
+    \bTD {{ invoice.delivered|texdate }}\eTD
+\eTR
+\bTR
+    \bTD {% trans %}Invoice issued:{% endtrans %}\eTD
+    \bTD {{ invoice.issued|texdate }}\eTD
+\eTR
+\bTR
+    \bTD {% trans %}Due date:{% endtrans %}\eTD
+    \bTD {{ invoice.deadline|texdate }} (
+        {%- trans grace=invoice.grace -%}
+            {{ grace }} day
+        {%- pluralize -%}
+            {{ grace }} days
+        {%- endtrans -%}
+    )\eTD
+\eTR
+
+{% block payment %}{% endblock %}
+
+\eTABLE
+\stop
+
+\blank[8mm]
+
+{% block footer %}{% endblock %}
+
+\stoptext
+{#
+vim: ft=context ts=4 sw=4 et
+#}

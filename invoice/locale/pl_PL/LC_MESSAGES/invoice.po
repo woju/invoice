@@ -7,99 +7,92 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  1.0-alpha\n"
 "Report-Msgid-Bugs-To: wojciech@porczyk.eu\n"
-"POT-Creation-Date: 2015-05-29 18:52+0200\n"
+"POT-Creation-Date: 2018-05-16 14:44+0200\n"
 "PO-Revision-Date: 2015-05-29 18:30+0200\n"
 "Last-Translator: Wojtek Porczyk <wojciech@porczyk.eu>\n"
+"Language: pl_PL\n"
 "Language-Team: Wojtek Porczyk <wojciech@porczyk.eu>\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
 "(n%100<10 || n%100>=20) ? 1 : 2\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.3.4\n"
 
-#: ../templates/invoice.tex:36
+#: invoice/templates/invoice-plain.tex:26
 msgid "VAT Invoice"
 msgstr "Faktura VAT"
 
-#: ../templates/invoice.tex:37
+#: invoice/templates/invoice-plain.tex:27
 msgid "PROFORMA"
 msgstr "PROFORMA"
 
-#: ../templates/invoice.tex:38
+#: invoice/templates/invoice-plain.tex:28
 #, python-format
 msgid "no.~{\\tfa %(number)s}"
 msgstr "nr~{\\tfa %(number)s}"
 
-#: ../templates/invoice.tex:46
+#: invoice/templates/invoice-plain.tex:36
 msgid "Seller:"
 msgstr "Sprzedawca:"
 
-#: ../templates/invoice.tex:54
+#: invoice/templates/invoice-plain.tex:44
 msgid "Buyer:"
 msgstr "Nabywca:"
 
-#: ../templates/invoice.tex:76
+#: invoice/templates/invoice-plain.tex:76
 msgid "no."
 msgstr "lp."
 
-#: ../templates/invoice.tex:77
+#: invoice/templates/invoice-plain.tex:77
 msgid "item"
 msgstr "nazwa"
 
-#: ../templates/invoice.tex:78
-msgid "unit"
-msgstr "jm."
-
-#: ../templates/invoice.tex:79
-msgid "unit price"
-msgstr "cena netto"
-
-#: ../templates/invoice.tex:80
-msgid "VAT rate"
-msgstr "stawka VAT"
-
-#: ../templates/invoice.tex:81
-msgid "amount"
-msgstr "wartość brutto"
-
-#: ../templates/invoice.tex:84
+#: invoice/templates/invoice-plain.tex:78
 msgid "qty"
 msgstr "ilość"
 
-#: ../templates/invoice.tex:85
+#: invoice/templates/invoice-plain.tex:79
+msgid "unit price"
+msgstr "cena netto"
+
+#: invoice/templates/invoice-plain.tex:80
 msgid "subtotal"
 msgstr "wartość netto"
 
-#: ../templates/invoice.tex:86
+#: invoice/templates/invoice-plain.tex:81
 msgid "VAT"
-msgstr "kwota VAT"
+msgstr "VAT"
 
-#: ../templates/invoice.tex:107
-msgid "total"
-msgstr "suma"
+#: invoice/templates/invoice-plain.tex:82
+msgid "line total"
+msgstr "wartość brutto"
 
-#: ../templates/invoice.tex:118
+#: invoice/templates/invoice-plain.tex:119
+msgid "total:"
+msgstr "suma:"
+
+#: invoice/templates/invoice-plain.tex:144
 msgid "Reverse charge, art.~28b."
 msgstr "Odwrotne obciążenie, art.~28b."
 
-#: ../templates/invoice.tex:132
+#: invoice/templates/invoice-plain.tex:157
 msgid "Total due:"
 msgstr "Do zapłaty:"
 
-#: ../templates/invoice.tex:136
+#: invoice/templates/invoice-plain.tex:164
 msgid "Delivered:"
 msgstr "Data wykonania:"
 
-#: ../templates/invoice.tex:140
+#: invoice/templates/invoice-plain.tex:168
 msgid "Invoice issued:"
 msgstr "Data wystawienia:"
 
-#: ../templates/invoice.tex:144
+#: invoice/templates/invoice-plain.tex:172
 msgid "Due date:"
 msgstr "Termin płatności:"
 
-#: ../templates/invoice.tex:146
+#: invoice/templates/invoice-plain.tex:174
 #, python-format
 msgid "%(grace)s day"
 msgid_plural "%(grace)s days"
@@ -107,23 +100,33 @@ msgstr[0] "%(grace)s dzień"
 msgstr[1] "%(grace)s dni"
 msgstr[2] "%(grace)s dni"
 
-#: ../templates/invoice.tex:154
+#: Documentation/examples/invoice.tex:19
 msgid "Please pay via:"
 msgstr "Na konto:"
 
-#: ../templates/invoice.tex:203
+#: Documentation/examples/invoice.tex:53
+msgid "VAT paid in PLN:"
+msgstr "Podatek VAT w PLN:"
+
+#: Documentation/examples/invoice.tex:89
 msgid "phone:"
 msgstr "telefon:"
 
-#: ../templates/invoice.tex:207
+#: Documentation/examples/invoice.tex:93
 msgid "email:"
 msgstr "email:"
 
-#: ../templates/invoice.tex:211
+#: Documentation/examples/invoice.tex:97
 msgid "PGP key:"
 msgstr "klucz PGP:"
 
-#: ../templates/invoice.tex:215
+#: Documentation/examples/invoice.tex:101
 msgid "fingerprint:"
 msgstr "fingerprint:"
+
+msgid "month"
+msgid_plural "months"
+msgstr[0] "miesiąc"
+msgstr[1] "miesiące"
+msgstr[2] "miesięcy"
 

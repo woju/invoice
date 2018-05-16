@@ -1,3 +1,7 @@
 invoice/__pycache__/
-invoice/*.py[co]
-invoice.sqlite3
+invoice/locale/**/*.mo
+invoice/locale/invoice.pot
+
+build/
+dist/
+*.egg-info/

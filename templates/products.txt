@@ -1,9 +1,0 @@
-==============================================================================
- kod       nazwa produktu                                      jm.       VAT%
-==============================================================================
-{% for product in products %} {{ '%-8s'|format(product.code)|colour('bold') }}  {{ '%-50s'|format(product.name) }}  {{ '%5s'|format(product.unit) }}  {{ '%4.0f'|format(product.vat) }}
-{% endfor -%}
-==============================================================================
-{#
-vim: ft=django ts=4 sw=4 et
-#}
