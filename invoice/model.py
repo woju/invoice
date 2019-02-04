@@ -28,7 +28,7 @@ import math as _math
 import re as _re
 import urllib.request as _urllib_request
 
-import lxml.etree as _lxml_etree
+import defusedxml.lxml as _lxml_etree
 
 from . import const as _const
 

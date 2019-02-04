@@ -9,6 +9,7 @@ sudo apt-get install \
     python3-babel \
     python3-jinja2 \
     python3-lxml \
+    python3-defusedxml \
     context
 sudo make install
 mkdir -p ~/Invoices ~/.invoice ~/.invoice/templates
